@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UserWebAPI21.Models;
 
 namespace WpfMVVM60
 {
@@ -29,18 +31,12 @@ namespace WpfMVVM60
 
         private void DataGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            HttpClient client = new HttpClient();
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.RequestUri = new Uri("https://localhost:44340/api/values");
-            request.Method = HttpMethod.Get;
-            request.Headers.Add("Accept", "application/json");
+            dataGrid.ItemsSource = Service.LoadDataAsync().Result;
+        }
 
-            HttpResponseMessage response = client.Send(request);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                HttpContent responseContent = response.Content;
-                var json = responseContent.ReadAsStringAsync();
-            }
+        private void B_update_Click(object sender, RoutedEventArgs e)
+        {
+            dataGrid.ItemsSource = Service.LoadDataAsync().Result;
         }
     }
 }
